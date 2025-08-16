@@ -81,9 +81,13 @@ public class DBManager : MonoBehaviour
     }
     public void ClearAllGames()
     {
-        db.DeleteAll<Game>();
         db.DeleteAll<Move>();
+        db.DeleteAll<Game>();
+
+        // รีเซ็ต auto-increment ของ Game
+        db.Execute("DELETE FROM sqlite_sequence WHERE name='Game';");
     }
+
     public Game FindGame(int gameId)
     {
         return db.Find<Game>(gameId); // SQLite4Unity3d

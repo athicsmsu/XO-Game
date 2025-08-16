@@ -12,6 +12,7 @@ public class XOGameManager : MonoBehaviour
     public string player1 = "Player 1";
     public string player2 = "Player 2";
     public bool isBotGame = false; // true ถ้าเล่นกับ AI
+    public bool isReplay = false; 
     private int gameId;
     private int turnCount = 0;
     public string CurrentPlayer { get; private set; }
@@ -20,9 +21,12 @@ public class XOGameManager : MonoBehaviour
     public bool IsGameOver => isGameOver;
     public Text StatusGamePlay;
 
+    private List<Move> tempMoves = new List<Move>(); // เก็บ moves ชั่วคราว
+
     void Start()
     {
         isGameOver = false;
+        isReplay = false;
         isBotGame = PlayerPrefs.GetInt("IsBotGame", 0) == 1;
 
         // รับ Board Size จาก Home
@@ -47,12 +51,11 @@ public class XOGameManager : MonoBehaviour
 
         // รีเซ็ตข้อความ
         if (StatusGamePlay != null)
-            StatusGamePlay.text = "";
+            StatusGamePlay.text = GetWinLength() <= 3 ? "First to 3 wins!" : "First to " + GetWinLength() + " wins!";
 
-        string player2Name = isBotGame ? "AI" : player2;
-        gameId = dbManager.CreateGame(boardSize, 3, player1, player2Name);
+        tempMoves.Clear(); // เคลียร์ moves ชั่วคราว
 
-        Debug.Log($"Game started: {player1} vs {player2Name} | Board {boardSize}x{boardSize}");
+        Debug.Log($"Game started: {player1} vs {(isBotGame ? "AI" : player2)} | Board {boardSize}x{boardSize}");
 
         // ปรับขนาด Grid และสร้างปุ่มใหม่
         gridManager.boardSize = boardSize;
@@ -68,7 +71,9 @@ public class XOGameManager : MonoBehaviour
     public void PlayerMove(int x, int y)
     {
         turnCount++;
-        dbManager.InsertMove(gameId, turnCount, CurrentPlayer, x, y);
+
+        // แทนที่จะบันทึกลง DB ทันที
+        tempMoves.Add(new Move { turn = turnCount, player = CurrentPlayer, x = x, y = y });
 
         if (CheckWin(CurrentPlayer, x, y)) return;
 
@@ -84,11 +89,9 @@ public class XOGameManager : MonoBehaviour
             StartCoroutine(BotMove());
     }
 
-
-    // ตัวอย่าง Bot เดินง่ายๆ เลือกช่องว่างแบบสุ่ม
     private IEnumerator BotMove()
     {
-        yield return new WaitForSeconds(0.5f); // ดีเลย์เหมือน Bot คิด
+        yield return new WaitForSeconds(0.5f);
 
         List<(int x, int y)> emptyCells = new List<(int x, int y)>();
         for (int y = 0; y < boardSize; y++)
@@ -109,7 +112,17 @@ public class XOGameManager : MonoBehaviour
 
     public void EndGame(string winner)
     {
+        if (isGameOver) return;
         isGameOver = true;
+
+        string player2Name = isBotGame ? "AI" : player2;
+
+        // สร้างเกมตอนจบและบันทึก moves
+        gameId = dbManager.CreateGame(boardSize, GetWinLength(), player1, player2Name);
+        foreach (var move in tempMoves)
+        {
+            dbManager.InsertMove(gameId, move.turn, move.player, move.x, move.y);
+        }
         dbManager.SetWinner(gameId, winner);
 
         if (StatusGamePlay != null)
@@ -122,7 +135,7 @@ public class XOGameManager : MonoBehaviour
             {
                 string displayWinner = winner;
                 if (isBotGame && winner == player2)
-                    displayWinner = "AI";  // แสดง AI แทน Player 2
+                    displayWinner = "AI";
                 StatusGamePlay.text = displayWinner + " Win!";
             }
         }
@@ -130,7 +143,13 @@ public class XOGameManager : MonoBehaviour
         Debug.Log("Winner is " + winner);
     }
 
-
+    private int GetWinLength()
+    {
+        if (boardSize <= 3) return 3;
+        else if (boardSize == 4) return 3;
+        else if (boardSize == 5) return 4;
+        else return 5;
+    }
 
     public void ReplayGame()
     {
@@ -141,52 +160,46 @@ public class XOGameManager : MonoBehaviour
     public void LoadGameForReplay(int gameId)
     {
         this.gameId = gameId;
+        isReplay = true;
 
-        // 1️⃣ ดึงข้อมูลเกมจาก DB
-        Game gameData = dbManager.FindGame(gameId); // ต้องมีฟังก์ชัน FindGame ใน DBManager
+        Game gameData = dbManager.FindGame(gameId);
         if (gameData != null)
         {
-            boardSize = gameData.boardSize; // ใช้ boardSize ของเกมจริง
+            boardSize = gameData.boardSize;
             gridManager.boardSize = boardSize;
 
-            // 2️⃣ ปรับ Grid Layout และสร้าง Grid ใหม่
             gridManager.AdjustGridLayout(boardSize);
 
-            // ลบปุ่มเก่าและสร้างใหม่
             foreach (Transform child in gridManager.boardParent)
                 GameObject.Destroy(child.gameObject);
             gridManager.CreateGrid();
         }
 
-        // 3️⃣ ดึง Moves แล้วเริ่ม Replay
         List<Move> moves = dbManager.GetMovesForReplay(gameId);
         gridManager.StartReplay(moves, replayDelay, gridManager.xSprite, gridManager.oSprite);
 
-        // reset ค่าเพื่อไม่ให้สร้างปัญหา
         PlayerPrefs.SetInt("ReplayGameId", -1);
     }
-
 
     public bool CheckWin(string player, int lastX, int lastY)
     {
         int winLength;
 
-        // กำหนดจำนวนช่องชนะตาม BoardSize
         if (boardSize <= 3)
             winLength = 3;
         else if (boardSize == 4)
             winLength = 3;
         else if (boardSize == 5)
             winLength = 4;
-        else // boardSize >= 6
+        else
             winLength = 5;
 
         var dirs = new Vector2Int[] {
-        new Vector2Int(1, 0),   // แนวนอน →
-        new Vector2Int(0, 1),   // แนวตั้ง ↑
-        new Vector2Int(1, 1),   // เฉียง ↗
-        new Vector2Int(1,-1),   // เฉียง ↘
-    };
+            new Vector2Int(1, 0),
+            new Vector2Int(0, 1),
+            new Vector2Int(1, 1),
+            new Vector2Int(1,-1),
+        };
 
         foreach (var d in dirs)
         {
@@ -206,7 +219,6 @@ public class XOGameManager : MonoBehaviour
         }
         return false;
     }
-
 
     private int CountInDirection(string player, int startX, int startY, int dx, int dy)
     {

@@ -2098,7 +2098,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6091746705668536787, guid: 6fff0c2e9213ac544b3b1a3c23d612f2, type: 3}
+  m_Sprite: {fileID: 6091746705668536787, guid: 3da34f5f2a490d94ab1719ed58f2bba7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2354,23 +2354,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: f181f496285f8d14883fd1aeb8c07d32, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5432235
+      value: 0.4817632
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: f181f496285f8d14883fd1aeb8c07d32, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5432235
+      value: 0.4817632
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: f181f496285f8d14883fd1aeb8c07d32, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5432235
+      value: 0.4817632
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: f181f496285f8d14883fd1aeb8c07d32, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.08
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: f181f496285f8d14883fd1aeb8c07d32, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.25
+      value: 2.3172
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: f181f496285f8d14883fd1aeb8c07d32, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3387,7 +3387,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6091746705668536787, guid: 3da34f5f2a490d94ab1719ed58f2bba7, type: 3}
+  m_Sprite: {fileID: 6091746705668536787, guid: 6fff0c2e9213ac544b3b1a3c23d612f2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

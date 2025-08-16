@@ -62,7 +62,7 @@ public class XOGridManager : MonoBehaviour
     // เมื่อคลิกที่เซลล์
     public void OnClickCell(int x, int y, bool isFromBot = false)
     {
-        if (!isFromBot && gameManager.isBotGame && gameManager.CurrentPlayer != gameManager.player1 || gameManager.IsGameOver)
+        if (!isFromBot && gameManager.isBotGame && gameManager.CurrentPlayer != gameManager.player1 || gameManager.IsGameOver || gameManager.isReplay)
             return;
 
         Image img = buttons[x, y].GetComponent<Image>();
