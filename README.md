@@ -14,6 +14,13 @@
 
 ---
 
+## วิธีเล่น
+
+- เลือกโหมด Player vs Player หรือ Player vs Bot
+- กดเลือก cell เพื่อวาง X หรือ O
+- เมื่อมีผู้ชนะหรือเสมอ → แสดงผลบนหน้าจอ
+- สามารถ Replay หรือดูประวัติผลแพ้-ชนะได้(เก็บเฉพาะกรณีที่จบเกมจากการชนะหรือเสมอ)
+
 ## ภาพตัวอย่าง
 *(ใส่ภาพ Gameplay ที่นี่)*  
 ![Screenshot](Assets/Screenshots/gameplay.png)
@@ -31,13 +38,14 @@
 ## สำหรับ Unity
 
 ### การติดตั้งและรันโปรเจกต์
+
 1. Clone หรือดาวน์โหลดโปรเจกต์จาก GitHub
    ```bash
    git clone https://github.com/athicsmsu/XO-Game.git
-2.เปิดโปรเจกต์ด้วย Unity 2021+
-3.เปิด Scene หลัก Assets/Scenes/Home.unity
-4.ตั้งค่า Build Settings → Platform: Android
-5.กด Play เพื่อทดสอบใน Editor หรือ Build & Run สำหรับ Android
+2. เปิดโปรเจกต์ด้วย Unity 2021+
+3. เปิด Scene หลัก Assets/Scenes/Home.unity
+4. ตั้งค่า Build Settings → Platform: Android
+5. กด Play เพื่อทดสอบใน Editor หรือ Build & Run สำหรับ Android
 
 ## Algorithm หลัก
 ### 1. ตรวจสอบผู้ชนะ (Win Condition)
@@ -61,10 +69,3 @@
   - วันเวลาเกม  
 - สามารถดึงข้อมูลมาแสดง **ประวัติการเล่นย้อนหลัง** ได้  
 - SQLite ทำให้สามารถเก็บข้อมูลภายในเครื่อง **ไม่ต้องเชื่อมต่ออินเทอร์เน็ต** และเรียกดูได้ทันที
-
-## วิธีเล่น
-
-- เลือกโหมด Player vs Player หรือ Player vs Bot
-- กดเลือก cell เพื่อวาง X หรือ O
-- เมื่อมีผู้ชนะหรือเสมอ → แสดงผลบนหน้าจอ
-- สามารถ Replay หรือดูประวัติผลแพ้-ชนะได้(เก็บเฉพาะกรณีที่จบเกมจากการชนะหรือเสมอ)
