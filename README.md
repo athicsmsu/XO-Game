@@ -21,9 +21,12 @@
 - เมื่อมีผู้ชนะหรือเสมอ → แสดงผลบนหน้าจอ
 - สามารถ Replay หรือดูประวัติผลแพ้-ชนะได้(เก็บเฉพาะกรณีที่จบเกมจากการชนะหรือเสมอ)
 
-## ภาพตัวอย่าง
-*(ใส่ภาพ Gameplay ที่นี่)*  
+## ภาพตัวอย่าง 
 ![Screenshot](Assets/Screenshots/gameplay.png)
+
+![Screenshot](Assets/Screenshots/gameplay2.png)
+
+![Screenshot](Assets/Screenshots/gameplay3.png)
 
 ---
 
